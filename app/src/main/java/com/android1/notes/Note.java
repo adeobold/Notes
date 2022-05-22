@@ -25,6 +25,16 @@ public class Note {
         return note;
     }
 
-    
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public void setCaption(String caption) {
+        this.caption = caption;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
 
 }
