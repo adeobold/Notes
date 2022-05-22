@@ -18,7 +18,7 @@ public class NoteFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         return inflater.inflate(R.layout.fragment_note, container, false);
     }
 
@@ -32,9 +32,10 @@ public class NoteFragment extends Fragment {
 
             TextView txNoteText = view.findViewById(R.id.tvNoteText);
 
-            txNoteText.setText("Заметка: " + note.getCaption() + "\n Дата: " + note.getDate() + "\n Текст заметки: " + note.getNote());
+            txNoteText.setText(String.format("Заметка: %s\n Дата: %s\n Текст заметки: %s", note.getCaption(), note.getDate(), note.getNote()));
 
         }
+
     }
 
 
