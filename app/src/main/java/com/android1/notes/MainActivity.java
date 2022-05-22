@@ -10,5 +10,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        CaptionFragment captionFragment = new CaptionFragment();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.caption_frame, captionFragment)
+                .commit();
+
     }
 }

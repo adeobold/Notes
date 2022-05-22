@@ -1,8 +1,9 @@
 package com.android1.notes;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Note {
+public class Note implements Serializable {
     private Date date;
     private String caption;
     private String note;
@@ -25,6 +26,16 @@ public class Note {
         return note;
     }
 
-    
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public void setCaption(String caption) {
+        this.caption = caption;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
 
 }
