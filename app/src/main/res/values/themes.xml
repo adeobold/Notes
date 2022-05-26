@@ -13,4 +13,11 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+
+    <!-- Кастомная AppTheme.Launcher. Устанавливает в качестве фона drawable -->
+    <style name="Theme.Notes.Launcher">
+        <item name="android:windowBackground">@drawable/notebook</item>
+        <item name="colorPrimaryDark">@android:color/white</item>
+    </style>
+
 </resources>
