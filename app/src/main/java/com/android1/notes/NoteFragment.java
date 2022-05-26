@@ -28,7 +28,7 @@ public class NoteFragment extends Fragment {
         Bundle arguments = getArguments();
 
         if (arguments != null) {
-            Note note = (Note) arguments.getSerializable(ARG_INDEX);
+            Note note = arguments.getParcelable(ARG_INDEX);
 
             TextView txNoteText = view.findViewById(R.id.tvNoteText);
 
@@ -42,7 +42,7 @@ public class NoteFragment extends Fragment {
     public static NoteFragment newInstance(Note note) {
         Bundle args = new Bundle();
         NoteFragment fragment = new NoteFragment();
-        args.putSerializable(ARG_INDEX, note);
+        args.putParcelable(ARG_INDEX, note);
         fragment.setArguments(args);
         return fragment;
     }
