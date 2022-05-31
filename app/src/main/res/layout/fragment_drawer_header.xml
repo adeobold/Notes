@@ -11,11 +11,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/drawer_header"
-        android:textSize="35sp"
+        android:textSize="@dimen/text_size"
         />
     <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:contentDescription="@string/drawer_header"
         android:src="@android:drawable/btn_star"
         />

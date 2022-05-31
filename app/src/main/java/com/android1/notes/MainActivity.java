@@ -1,16 +1,13 @@
 package com.android1.notes;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import com.google.android.material.navigation.NavigationView;
 
@@ -40,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         initDrawer(toolbar);
     }
 
+    @SuppressLint("NonConstantResourceId")
     private void initDrawer(Toolbar toolbar) {
 // Находим DrawerLayout
         final DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -52,23 +50,19 @@ public class MainActivity extends AppCompatActivity {
         toggle.syncState();
 // Обработка навигационного меню
         NavigationView navigationView = findViewById(R.id.navigation_view);
-        navigationView.setNavigationItemSelectedListener(new
-                                                                 NavigationView.OnNavigationItemSelectedListener() {
-                                                                     @Override
-                                                                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                                                                         int id = item.getItemId();
-                                                                         switch (id) {
-                                                                             case R.id.action_drawer_about:
-                                                                                 openAboutFragment();
-                                                                                 drawer.close();
-                                                                                 return true;
-                                                                             case R.id.action_drawer_exit:
-                                                                                 finish();
-                                                                                 return true;
-                                                                         }
-                                                                         return false;
-                                                                     }
-                                                                 });
+        navigationView.setNavigationItemSelectedListener(item -> {
+            int id = item.getItemId();
+            switch (id) {
+                case R.id.action_drawer_about:
+                    openAboutFragment();
+                    drawer.close();
+                    return true;
+                case R.id.action_drawer_exit:
+                    finish();
+                    return true;
+            }
+            return false;
+        });
     }
 
     private void openAboutFragment() {
@@ -82,8 +76,4 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        return super.onCreateOptionsMenu(menu);
-//    }
 }
