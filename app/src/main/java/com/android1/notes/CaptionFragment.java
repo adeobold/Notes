@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -44,6 +45,20 @@ public class CaptionFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.menu_fragment_caption, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        if (item.getItemId() == R.id.action_search){
+            Toast.makeText(getContext(),"Search button click", Toast.LENGTH_SHORT).show();
+        }
+
+        if (item.getItemId() == R.id.action_sort){
+            Toast.makeText(getContext(),"Sort button click", Toast.LENGTH_SHORT).show();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private void initListNotes(View view) {
