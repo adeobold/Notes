@@ -7,6 +7,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -18,7 +21,7 @@ public class NoteFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        setHasOptionsMenu(true);
         return inflater.inflate(R.layout.fragment_note, container, false);
     }
 
@@ -38,6 +41,18 @@ public class NoteFragment extends Fragment {
 
     }
 
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_fragment_note, menu);
+        MenuItem itemActionSearch = menu.findItem(R.id.action_search);
+        if (itemActionSearch != null) {
+            itemActionSearch.setVisible(false);
+        }
+        MenuItem itemActionSort = menu.findItem(R.id.action_sort);
+        if (itemActionSort != null) {
+            itemActionSort.setVisible(false);
+        }
+    }
 
     public static NoteFragment newInstance(Note note) {
         Bundle args = new Bundle();
