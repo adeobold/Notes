@@ -6,4 +6,10 @@
     <string name="search">Сортировка</string>
     <string name="send">Переслать</string>
     <string name="addPhoto">Добавить фото</string>
+    <string name="about">О приложении</string>
+    <string name="exit">Выход</string>
+    <string name="drawer_header">Заметки</string>
+    <string name="navigation_drawer_open">opened</string>
+    <string name="navigation_drawer_close">closed</string>
+    <string name="about_developers">Автор: Деобольд Андрей</string>
 </resources>
