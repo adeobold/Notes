@@ -12,4 +12,8 @@
     <string name="navigation_drawer_open">opened</string>
     <string name="navigation_drawer_close">closed</string>
     <string name="about_developers">Автор: Деобольд Андрей</string>
+    <string name="newNote">Создать</string>
+    <string name="dialNewCancel">Отменить</string>
+    <string name="dialNewOk">Создать</string>
+    <string name="dialNewText">Новая заметка</string>
 </resources>

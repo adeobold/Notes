@@ -17,7 +17,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +26,15 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class CaptionFragment extends Fragment {
+
+    private LinearLayout layoutView;
+    private final ArrayList<Note> NotesList = new ArrayList<>();
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getParentFragmentManager().setFragmentResultListener("NewNote", this, (key, bundle) -> addNewNote(bundle.getString("NewNoteName")));
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -72,14 +80,39 @@ public class CaptionFragment extends Fragment {
             Toast.makeText(getContext(),"Sort button click", Toast.LENGTH_SHORT).show();
         }
 
+        if (item.getItemId() == R.id.action_new){
+
+            new NewNoteDialogFragment()
+                    .show(getChildFragmentManager(), NewNoteDialogFragment.TAG);
+
+        }
+
         return super.onOptionsItemSelected(item);
+    }
+
+    public void addNewNote(String noteName) {
+
+        TextView tv = new TextView(getContext());
+
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, 2022);
+        cal.set(Calendar.MONTH, Calendar.MAY);
+        cal.set(Calendar.DAY_OF_MONTH, 22);
+        Date noteDate = cal.getTime();
+
+        Note newNote = new Note(noteDate, noteName, "Содержимое заметки " + noteName);
+
+        NotesList.add(newNote);
+
+        tv.setText(newNote.getCaption());
+        tv.setTextSize(25);
+        layoutView.addView(tv);
+        tv.setOnClickListener(v -> CaptionFragment.this.showNote(newNote));
     }
 
     private void initListNotes(View view) {
 
-        LinearLayout layoutView = (LinearLayout) view;
-
-        ArrayList<Note> NotesList = new ArrayList<>();
+        layoutView = (LinearLayout) view;
 
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, 2022);
@@ -96,8 +129,7 @@ public class CaptionFragment extends Fragment {
             tv.setText(note.getCaption());
             tv.setTextSize(25);
             layoutView.addView(tv);
-            final Note noteArg = note;
-            tv.setOnClickListener(v -> CaptionFragment.this.showNote(noteArg));
+            tv.setOnClickListener(v -> CaptionFragment.this.showNote(note));
         }
 
 
