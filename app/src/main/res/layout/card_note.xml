@@ -6,7 +6,8 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardCornerRadius="25dp"
-    app:cardElevation="3dp">
+    app:cardElevation="3dp"
+    android:layout_margin="5dp">
 
 <LinearLayout
     android:layout_width="match_parent"
@@ -27,6 +28,7 @@
         android:gravity="center_vertical"
         tools:text="Title"
         android:textSize="@dimen/text_size"
+        android:textStyle="bold"
         tools:ignore="MissingConstraints" />
 
 </LinearLayout>

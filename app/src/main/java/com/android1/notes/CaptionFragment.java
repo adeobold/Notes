@@ -10,6 +10,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,7 +19,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,8 +28,10 @@ import java.util.Date;
 
 public class CaptionFragment extends Fragment {
 
-    private LinearLayout layoutView;
-    private final ArrayList<Note> NotesList = new ArrayList<>();
+    private RecyclerView layoutView;
+    private NoteAdapter noteAdapter;
+    private RecyclerView rv;
+    private final ArrayList<Note> notesList = new ArrayList<>();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -72,15 +75,15 @@ public class CaptionFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
-        if (item.getItemId() == R.id.action_search){
-            Toast.makeText(getContext(),"Search button click", Toast.LENGTH_SHORT).show();
+        if (item.getItemId() == R.id.action_search) {
+            Toast.makeText(getContext(), "Search button click", Toast.LENGTH_SHORT).show();
         }
 
-        if (item.getItemId() == R.id.action_sort){
-            Toast.makeText(getContext(),"Sort button click", Toast.LENGTH_SHORT).show();
+        if (item.getItemId() == R.id.action_sort) {
+            Toast.makeText(getContext(), "Sort button click", Toast.LENGTH_SHORT).show();
         }
 
-        if (item.getItemId() == R.id.action_new){
+        if (item.getItemId() == R.id.action_new) {
 
             new NewNoteDialogFragment()
                     .show(getChildFragmentManager(), NewNoteDialogFragment.TAG);
@@ -102,17 +105,20 @@ public class CaptionFragment extends Fragment {
 
         Note newNote = new Note(noteDate, noteName, "Содержимое заметки " + noteName);
 
-        NotesList.add(newNote);
+        notesList.add(newNote);
 
-        tv.setText(newNote.getCaption());
-        tv.setTextSize(25);
-        layoutView.addView(tv);
-        tv.setOnClickListener(v -> CaptionFragment.this.showNote(newNote));
+        noteAdapter.setList(notesList);
+        noteAdapter.setCardClickListener(position -> showNote(notesList.get(position)));
+
+        rv.setAdapter(noteAdapter);
+
+//        tv.setText(newNote.getCaption());
+//        tv.setTextSize(25);
+//        layoutView.addView(tv);
+//        tv.setOnClickListener(v -> CaptionFragment.this.showNote(newNote));
     }
 
     private void initListNotes(View view) {
-
-        layoutView = (LinearLayout) view;
 
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, 2022);
@@ -121,16 +127,34 @@ public class CaptionFragment extends Fragment {
         Date noteDate = cal.getTime();
 
         for (int i = 0; i < 10; i++) {
-            NotesList.add(new Note(noteDate, "Заметка " + (i + 1), "Содержимое заметки " + (i + 1)));
+            notesList.add(new Note(noteDate, "Заметка " + (i + 1), "Содержимое заметки " + (i + 1)));
         }
 
-        for (Note note : NotesList) {
-            TextView tv = new TextView(getContext());
-            tv.setText(note.getCaption());
-            tv.setTextSize(25);
-            layoutView.addView(tv);
-            tv.setOnClickListener(v -> CaptionFragment.this.showNote(note));
-        }
+        layoutView = (RecyclerView) view;
+
+        rv = view.findViewById(R.id.noteRecycleView);
+
+        LinearLayoutManager llm = new LinearLayoutManager(getContext());
+        rv.setLayoutManager(llm);
+
+        noteAdapter = new NoteAdapter();
+        noteAdapter.setList(notesList);
+        noteAdapter.setCardClickListener(position -> showNote(notesList.get(position)));
+
+        rv.setAdapter(noteAdapter);
+
+
+//        for (Note note : NotesList) {
+//
+//            View cardView = getLayoutInflater().inflate(R.layout.card_note, layoutView, false);
+//
+//
+//
+//            TextView tv = cardView.findViewById(R.id.caption);
+//            tv.setText(note.getCaption());
+//            layoutView.addView(cardView);
+//            tv.setOnClickListener(v -> CaptionFragment.this.showNote(note));
+//        }
 
 
     }
