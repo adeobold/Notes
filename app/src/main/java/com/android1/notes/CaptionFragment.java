@@ -1,5 +1,6 @@
 package com.android1.notes;
 
+import android.annotation.SuppressLint;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
@@ -13,35 +14,33 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 public class CaptionFragment extends Fragment {
 
-    private RecyclerView layoutView;
     private NoteAdapter noteAdapter;
     private RecyclerView rv;
-    private final ArrayList<Note> notesList = new ArrayList<>();
+    private NoteSource noteList;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getParentFragmentManager().setFragmentResultListener("NewNote", this, (key, bundle) -> addNewNote(bundle.getString("NewNoteName")));
+        //getParentFragmentManager().setFragmentResultListener("NewNote", this, (key, bundle) -> addNewNote(bundle.getString("NewNoteName")));
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        noteList = new NoteSourceImpl();
+
         setHasOptionsMenu(true);
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_caption, container, false);
@@ -70,92 +69,76 @@ public class CaptionFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.menu_fragment_caption, menu);
+        //inflater.inflate(R.menu.menu_list, menu);
     }
 
+    @SuppressLint({"NonConstantResourceId", "NotifyDataSetChanged"})
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
-        if (item.getItemId() == R.id.action_search) {
-            Toast.makeText(getContext(), "Search button click", Toast.LENGTH_SHORT).show();
+        switch (item.getItemId()){
+            case R.id.action_add:
+                noteList.addCardData(new Note("Заметка " + (noteList.size()+1),
+                        "Описание " + (noteList.size()+1)));
+                noteAdapter.notifyItemInserted(noteList.size() - 1);
+                rv.scrollToPosition(noteList.size() - 1);
+                return true;
+            case R.id.action_clear:
+                noteList.clearCardData();
+                noteAdapter.notifyDataSetChanged();
+                return true;
         }
-
-        if (item.getItemId() == R.id.action_sort) {
-            Toast.makeText(getContext(), "Sort button click", Toast.LENGTH_SHORT).show();
-        }
-
-        if (item.getItemId() == R.id.action_new) {
-
-            new NewNoteDialogFragment()
-                    .show(getChildFragmentManager(), NewNoteDialogFragment.TAG);
-
-        }
-
         return super.onOptionsItemSelected(item);
+
     }
 
-    public void addNewNote(String noteName) {
-
-        TextView tv = new TextView(getContext());
-
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.YEAR, 2022);
-        cal.set(Calendar.MONTH, Calendar.MAY);
-        cal.set(Calendar.DAY_OF_MONTH, 22);
-        Date noteDate = cal.getTime();
-
-        Note newNote = new Note(noteDate, noteName, "Содержимое заметки " + noteName);
-
-        notesList.add(newNote);
-
-        noteAdapter.setList(notesList);
-        noteAdapter.setCardClickListener(position -> showNote(notesList.get(position)));
-
-        rv.setAdapter(noteAdapter);
-
-//        tv.setText(newNote.getCaption());
-//        tv.setTextSize(25);
-//        layoutView.addView(tv);
-//        tv.setOnClickListener(v -> CaptionFragment.this.showNote(newNote));
+    @Override
+    public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View v,
+                                    @Nullable ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = requireActivity().getMenuInflater();
+        inflater.inflate(R.menu.menu_list, menu);
     }
+
+    @SuppressLint("NonConstantResourceId")
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        int position = noteAdapter.getMenuPosition();
+        switch(item.getItemId()) {
+            case R.id.action_update:
+                noteList.updateCardData(position, new Note("Редактированное название", "Редактированное содержимое"));
+                noteAdapter.notifyItemChanged(position);
+                return true;
+            case R.id.action_delete:
+                noteList.deleteCardData(position);
+                noteAdapter.notifyItemRemoved(position);
+                return true;
+        }
+        return super.onContextItemSelected(item);
+    }
+
+
 
     private void initListNotes(View view) {
 
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.YEAR, 2022);
-        cal.set(Calendar.MONTH, Calendar.MAY);
-        cal.set(Calendar.DAY_OF_MONTH, 22);
-        Date noteDate = cal.getTime();
+        // Получим источник данных для списка
+        noteList = new NoteSourceImpl().init();
+        initRecyclerView(view);
 
-        for (int i = 0; i < 10; i++) {
-            notesList.add(new Note(noteDate, "Заметка " + (i + 1), "Содержимое заметки " + (i + 1)));
-        }
+    }
 
-        layoutView = (RecyclerView) view;
+    private void initRecyclerView(View view) {
 
         rv = view.findViewById(R.id.noteRecycleView);
 
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
         rv.setLayoutManager(llm);
 
-        noteAdapter = new NoteAdapter();
-        noteAdapter.setList(notesList);
-        noteAdapter.setCardClickListener(position -> showNote(notesList.get(position)));
+        noteAdapter = new NoteAdapter(noteList, this);
+        //noteAdapter.setList(noteList);
+        noteAdapter.setCardClickListener(position -> showNote(noteList.getCardData(position)));
 
         rv.setAdapter(noteAdapter);
-
-
-//        for (Note note : NotesList) {
-//
-//            View cardView = getLayoutInflater().inflate(R.layout.card_note, layoutView, false);
-//
-//
-//
-//            TextView tv = cardView.findViewById(R.id.caption);
-//            tv.setText(note.getCaption());
-//            layoutView.addView(cardView);
-//            tv.setOnClickListener(v -> CaptionFragment.this.showNote(note));
-//        }
-
 
     }
 
@@ -191,5 +174,7 @@ public class CaptionFragment extends Fragment {
                 .addToBackStack("")
                 .commit();
     }
+
+
 
 }

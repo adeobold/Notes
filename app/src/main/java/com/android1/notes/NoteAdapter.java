@@ -6,25 +6,29 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
-
-import java.util.List;
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> {
 
-    private List<Note> list;
+    private NoteSource list;
 
     private CardClickListener cardClickListener;
+
+    private final Fragment fragment;
+
+    private int menuPosition;
+
+    public NoteAdapter(NoteSource list, Fragment fragment) {
+        this.list = list;
+        this.fragment = fragment;
+    }
 
     public void setCardClickListener(CardClickListener cardClickListener) {
         this.cardClickListener = cardClickListener;
     }
 
-    public List<Note> getList() {
-        return list;
-    }
-
-    public void setList(List<Note> list) {
+    public void setList(NoteSource list) {
         this.list = list;
     }
 
@@ -37,7 +41,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull NoteViewHolder holder, int position) {
-        holder.getItemView().<TextView>findViewById(R.id.caption).setText(list.get(position).getCaption());
+        holder.getItemView().<TextView>findViewById(R.id.caption).setText(list.getCardData(position).getCaption());
     }
 
     @Override
@@ -45,20 +49,48 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
         return list.size();
     }
 
+    public int getMenuPosition() {
+        return menuPosition;
+    }
 
 
     public class NoteViewHolder extends RecyclerView.ViewHolder{
 
-        private View noteView;
+        private final View noteView;
 
         public NoteViewHolder(@NonNull View noteView) {
             super(noteView);
             this.noteView = noteView;
+            registerContextMenu(itemView);
             noteView.findViewById(R.id.caption).setOnClickListener(view -> cardClickListener.onCaptionClick(getAdapterPosition()));
+
+            noteView.findViewById(R.id.caption).setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    menuPosition = getLayoutPosition();
+                    itemView.showContextMenu(10, 10);
+                    return true;
+                }
+            });
+
+
         }
 
         public View getItemView() {
             return this.noteView;
+        }
+
+        private void registerContextMenu(@NonNull View itemView) {
+            if (fragment != null){
+                itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        menuPosition = getLayoutPosition();
+                        return false;
+                    }
+                });
+                fragment.registerForContextMenu(itemView);
+            }
         }
     }
 

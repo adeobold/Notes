@@ -4,12 +4,26 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
 
 public class Note implements Parcelable {
     private Date date;
     private String caption;
     private String note;
+
+    public Note(String caption, String note) {
+
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, 2022);
+        cal.set(Calendar.MONTH, Calendar.MAY);
+        cal.set(Calendar.DAY_OF_MONTH, 22);
+        Date noteDate = cal.getTime();
+
+        this.date = noteDate;
+        this.caption = caption;
+        this.note = note;
+    }
 
     public Note(Date date, String caption, String note) {
         this.date = date;

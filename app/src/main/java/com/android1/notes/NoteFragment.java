@@ -17,13 +17,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class NoteFragment extends Fragment {
 
     private static final String ARG_INDEX = "index";
-    private TextView txNoteText;
+    private EditText noteCaption;
+    private EditText noteText;
     public static final int PICK_IMAGE = 1;
 
     @Override
@@ -51,9 +53,11 @@ public class NoteFragment extends Fragment {
         if (arguments != null) {
             Note note = arguments.getParcelable(ARG_INDEX);
 
-            txNoteText = view.findViewById(R.id.tvNoteText);
+            noteCaption = view.findViewById(R.id.tvNoteCaption);
+            noteText = view.findViewById(R.id.tvNoteText);
 
-            txNoteText.setText(String.format("Заметка: %s\n Дата: %s\n Текст заметки: %s", note.getCaption(), note.getDate(), note.getNote()));
+            noteCaption.setText(note.getCaption());
+            noteText.setText(note.getNote());
 
         }
 
@@ -76,7 +80,7 @@ public class NoteFragment extends Fragment {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
         if (item.getItemId() == R.id.action_gallery) {
-            txNoteText.setText("Gallery button click");
+            noteText.setText("Gallery button click");
 
             Intent intent = new Intent();
             intent.setType("image/*");
@@ -86,11 +90,11 @@ public class NoteFragment extends Fragment {
         }
 
         if (item.getItemId() == R.id.action_send) {
-            txNoteText.setText("Send button click");
+            noteText.setText("Send button click");
 
             Intent shareIntent = new Intent();
             shareIntent.setAction(Intent.ACTION_SEND);
-            shareIntent.putExtra(Intent.EXTRA_TEXT, txNoteText.getText());
+            shareIntent.putExtra(Intent.EXTRA_TEXT, noteText.getText());
             shareIntent.setType("*/*");
             startActivity(Intent.createChooser(shareIntent, "Share"));
 

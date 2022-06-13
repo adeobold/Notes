@@ -16,4 +16,8 @@
     <string name="dialNewCancel">Отменить</string>
     <string name="dialNewOk">Создать</string>
     <string name="dialNewText">Новая заметка</string>
+    <string name="update">Редактировать</string>
+    <string name="delete">Удалить</string>
+    <string name="add">Добавить</string>
+    <string name="clear">Очистить</string>
 </resources>
