@@ -1,6 +1,8 @@
 package com.android1.notes;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
@@ -22,17 +24,46 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.GsonBuilder;
+
 public class CaptionFragment extends Fragment {
 
     private NoteAdapter noteAdapter;
     private RecyclerView rv;
     private NoteSource noteList;
 
+    private SharedPreferences sharedPref = null;
+    public static final String NOTES = "NOTES";
+    public static final String NOTES_COUNT = "NOTES_COUNT";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //getParentFragmentManager().setFragmentResultListener("NewNote", this, (key, bundle) -> addNewNote(bundle.getString("NewNoteName")));
+        sharedPref = requireActivity().getSharedPreferences(NOTES, Context.MODE_PRIVATE);
+    }
+
+    private void readNotesFromSharedPrefs() {
+        int notesCount = sharedPref.getInt(NOTES_COUNT,0);
+        for (int i = 0; i < notesCount; i++){
+            String tmpString = sharedPref.getString("Note" + i, null);
+            Note tmpNote = new GsonBuilder().create().fromJson(tmpString, Note.class);
+            noteList.addCardData(tmpNote);
+        }
+    }
+
+    @SuppressLint("CommitPrefEdits")
+    @Override
+    public void onDestroy() {
+
+        sharedPref.edit().putInt(NOTES_COUNT, noteList.size()).apply();
+
+        for (int i = 0; i < noteList.size(); i++){
+            String jsonNote = new GsonBuilder().create().toJson(noteList.getCardData(i));
+            sharedPref.edit().putString("Note" + i, jsonNote).apply();
+        }
+
+        super.onDestroy();
     }
 
     @Override
@@ -123,6 +154,7 @@ public class CaptionFragment extends Fragment {
 
         // Получим источник данных для списка
         noteList = new NoteSourceImpl().init();
+        readNotesFromSharedPrefs();
         initRecyclerView(view);
 
     }

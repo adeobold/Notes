@@ -22,9 +22,9 @@ public class NoteSourceImpl implements NoteSource {
         cal.set(Calendar.DAY_OF_MONTH, 22);
         Date noteDate = cal.getTime();
 
-        for (int i = 0; i < 10; i++) {
-            dataSource.add(new Note(noteDate, "Заметка " + (i + 1), "Содержимое заметки " + (i + 1)));
-        }
+//        for (int i = 0; i < 10; i++) {
+//            dataSource.add(new Note(noteDate, "Заметка " + (i + 1), "Содержимое заметки " + (i + 1)));
+//        }
         return this;
     }
 
