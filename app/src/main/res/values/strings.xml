@@ -1,3 +1,23 @@
 <resources>
-    <string name="app_name">Notes</string>
+    <string name="app_name">Заметки</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="sort">Сортировка</string>
+    <string name="search">Сортировка</string>
+    <string name="send">Переслать</string>
+    <string name="addPhoto">Добавить фото</string>
+    <string name="about">О приложении</string>
+    <string name="exit">Выход</string>
+    <string name="drawer_header">Заметки</string>
+    <string name="navigation_drawer_open">opened</string>
+    <string name="navigation_drawer_close">closed</string>
+    <string name="about_developers">Автор: Деобольд Андрей</string>
+    <string name="newNote">Создать</string>
+    <string name="dialNewCancel">Отменить</string>
+    <string name="dialNewOk">Создать</string>
+    <string name="dialNewText">Новая заметка</string>
+    <string name="update">Редактировать</string>
+    <string name="delete">Удалить</string>
+    <string name="add">Добавить</string>
+    <string name="clear">Очистить</string>
 </resources>
